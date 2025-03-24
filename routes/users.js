@@ -40,12 +40,10 @@ router.put('/:id', async function (req, res, next) {
       message: updatedUser
     });
   } catch (error) {
-    res.status(404).send({
-      success: false,
-      message: error.message
-    });
+    next(error)
   }
 });
+
 router.delete('/:id', async function (req, res, next) {
   try {
     let deleteUser = await userControllers.deleteAnUser(req.params.id);
@@ -54,10 +52,7 @@ router.delete('/:id', async function (req, res, next) {
       message: deleteUser
     });
   } catch (error) {
-    res.status(404).send({
-      success: false,
-      message: error.message
-    });
+    next(error)
   }
 
 });
