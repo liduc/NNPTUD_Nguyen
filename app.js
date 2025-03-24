@@ -28,6 +28,7 @@ app.use(express.static(path.join(__dirname, 'public')));
 
 app.use('/', indexRouter);
 app.use('/users', usersRouter);
+app.use('/roles', require('./routes/roles'));
 app.use('/products', require('./routes/products'));
 app.use('/categories', require('./routes/categories'));
 // catch 404 and forward to error handler
