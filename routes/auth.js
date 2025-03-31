@@ -46,5 +46,19 @@ router.get('/me', check_authentication, async function (req, res, next) {
         next(error)
     }
 });
+router.post('/changepassword',check_authentication, async function (req, res, next) {
+    try {
+        let oldpassword = req.body.oldpassword;
+        let newpassword = req.body.newpassword;
+        let user = userControllers.changePassword(req.user,oldpassword,newpassword);
+        res.send({
+            success: true,
+            data: user
+        });
+        
+    } catch (error) {
+        next(error)
+    }
+});
 
 module.exports = router
