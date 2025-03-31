@@ -6,7 +6,7 @@ module.exports = {
         return userSchema.find({})
     },
     getUserById: async function (id) {
-        return userSchema.findById(id)
+        return userSchema.findById(id).populate('role')
     },
     getUserByUsername: async function (username) {
         return userSchema.findOne({

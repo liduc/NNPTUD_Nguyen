@@ -3,34 +3,23 @@ const { token } = require('morgan');
 var router = express.Router();
 var userControllers = require('../controllers/users')
 let jwt = require('jsonwebtoken');
+let { check_authentication, check_authorization } = require("../utils/check_auth");
 const constants = require('../utils/constants');
 
 /* GET users listing. */
-router.get('/', async function (req, res, next) {
-  try {
-    if (!req.headers || !req.headers.authorization) {
-      throw new Error("ban chua dang nhap")
-    }
-    if (!req.headers.authorization.startsWith("Bearer")) {
-      throw new Error("ban chua dang nhap")
-    }
-    let token = req.headers.authorization.split(" ")[1];
-    let result = jwt.verify(token, constants.SECRET_KEY);
-    let user_id = result.id;
-    if (result.expireIn > Date.now()) {
+router.get('/', check_authentication, check_authorization(['admin'])
+  , async function (req, res, next) {
+    try {
       let users = await userControllers.getAllUsers()
       res.send({
         success: true,
         data: users
       });
-    } else {
-      throw new Error("token het han")
+    } catch (error) {
+      next(error)
     }
-  } catch (error) {
-    next(error)
-  }
-});
-router.post('/', async function (req, res, next) {
+  });
+router.post('/', check_authentication, check_authorization(constants.ADMIN_PERMISSION), async function (req, res, next) {
   try {
     let body = req.body;
     let newUser = await userControllers.createAnUser(
