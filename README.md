@@ -1,2 +1,2 @@
 # NNPTUD_S2
-# Vào nhánh mỗi ngày để lấy code
+# Trần Mai Trung Nguyên_2180607812
