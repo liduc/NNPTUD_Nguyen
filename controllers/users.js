@@ -8,8 +8,13 @@ module.exports = {
     getUserById: async function (id) {
         return userSchema.findById(id)
     },
+    getUserByUsername: async function (username) {
+        return userSchema.findOne({
+            username: username
+        })
+    },
     createAnUser: async function (username, password, email, roleI) {
-        
+
         let role = await roleSchema.findOne({
             name: roleI
         })
@@ -27,23 +32,35 @@ module.exports = {
         }
 
     },
-    updateAnUser: async function(id,body){
+    updateAnUser: async function (id, body) {
         let updatedUser = await this.getUserById(id);
-        let allowFields = ["password","email"];
+        let allowFields = ["password", "email"];
         for (const key of Object.keys(body)) {
-            if(allowFields.includes(key)){
+            if (allowFields.includes(key)) {
                 updatedUser[key] = body[key]
             }
         }
         await updatedUser.save();
         return updatedUser;
     },
-    deleteAnUser: async function(id){
+    deleteAnUser: async function (id) {
         let updatedUser = await userSchema.findByIdAndUpdate(
-            id,{
-                status:false
-            },{new:true}
+            id, {
+            status: false
+        }, { new: true }
         )
         return updatedUser;
+    },
+    checkLogin:async function(username,password){
+        let user = await this.getUserByUsername(username);
+        if (!user) {
+            throw new Error("username user hoac password khong dung")
+        } else {
+            if (bcrypt.compareSync(password, user.password)) {
+                return user._id;
+            } else {
+                throw new Error("username user hoac password khong dung")
+            }
+        }
     }
 }
